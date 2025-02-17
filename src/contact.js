@@ -1,9 +1,23 @@
 /**
- * Este script maneja la lógica del formulario de contacto.
- * Captura los datos introducidos por el usuario, verifica que no estén vacíos
- * y muestra un mensaje de confirmación o error al enviar el formulario.
+ * Maneja la lógica del formulario de contacto.
+ * Captura los datos introducidos por el usuario, verifica que los campos no estén vacíos
+ * y muestra un mensaje de confirmación o error según corresponda al enviar el formulario.
+ * 
+ * @function enviarFormulario
+ * @returns {void}
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', enviarFormulario);
+
+/**
+ * Función que gestiona el envío del formulario de contacto.
+ * Previene el comportamiento por defecto del formulario, verifica que los campos 'name' y 'message'
+ * no estén vacíos y muestra un mensaje de confirmación o error.
+ * 
+ * @event submit
+ * @param {Event} e - El evento de envío del formulario.
+ * @returns {void}
+ */
+function enviarFormulario() {
     // Obtener el formulario de contacto
     const contactForm = document.getElementById('contactForm');
 
@@ -25,4 +39,5 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Por favor, completa todos los campos.');
         }
     });
-});
+}
+

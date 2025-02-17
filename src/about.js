@@ -1,9 +1,22 @@
 /**
- * Este script maneja la lógica de cambio de imagen al hacer clic.
- * Inicializa un conjunto de imágenes y cambia la imagen mostrada
- * cada vez que se hace clic sobre la imagen actual.
+ * Maneja la lógica de cambio de imagen al hacer clic.
+ * Inicializa un conjunto de imágenes y cambia la imagen mostrada cada vez que se hace clic sobre la imagen actual.
+ * 
+ * @function mostrarFotos
+ * @returns {void}
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', mostrarFotos);
+
+/**
+ * Función que gestiona el cambio de imagen al hacer clic en la imagen mostrada.
+ * Crea un elemento de imagen, lo añade al DOM, y cada vez que el usuario hace clic sobre la imagen,
+ * se muestra la siguiente imagen del conjunto de imágenes de forma cíclica.
+ * 
+ * @event click
+ * @param {Event} e - El evento de clic sobre la imagen.
+ * @returns {void}
+ */
+function mostrarFotos() {
     // Array que contiene las rutas de las imágenes
     const images = [
         './images/imagen1.png',
@@ -22,4 +35,5 @@ document.addEventListener('DOMContentLoaded', () => {
         currentIndex = (currentIndex + 1) % images.length; // Incrementar índice y ciclar entre imágenes
         imageElement.src = images[currentIndex]; // Actualizar la imagen
     });
-});
+}
+
