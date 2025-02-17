@@ -1,0 +1,145 @@
+/**
+ * Clase que representa una tarea.
+ * Cada tarea tiene un texto y un estado de completado.
+ */
+class Task {
+    constructor(text) {
+        this.text = text; // Texto descriptivo de la tarea
+        this.completed = false; // Estado de la tarea (completada o no)
+    }
+}
+
+/**
+ * Clase que maneja la lógica del gestor de tareas.
+ * Permite agregar, eliminar, completar y obtener las tareas.
+ * Además, guarda las tareas en el almacenamiento local (localStorage).
+ */
+class TaskManager {
+    constructor() {
+        // Cargar las tareas guardadas en el almacenamiento local o iniciar con un arreglo vacío
+        this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    }
+
+    /**
+     * Agrega una nueva tarea al gestor.
+     * 
+     * @param {string} text El texto descriptivo de la nueva tarea.
+     */
+    addTask(text) {
+        const task = new Task(text); // Crear una nueva tarea
+        this.tasks.push(task); // Añadir la tarea al arreglo de tareas
+        this.updateLocalStorage(); // Actualizar el almacenamiento local
+    }
+
+    /**
+     * Elimina una tarea en base a su índice.
+     * 
+     * @param {number} index El índice de la tarea a eliminar.
+     */
+    removeTask(index) {
+        this.tasks.splice(index, 1); // Eliminar la tarea del arreglo
+        this.updateLocalStorage(); // Actualizar el almacenamiento local
+    }
+
+    /**
+     * Cambia el estado de completado de una tarea.
+     * 
+     * @param {number} index El índice de la tarea a modificar.
+     */
+    toggleTaskCompleted(index) {
+        this.tasks[index].completed = !this.tasks[index].completed; // Alternar el estado de completado
+        this.updateLocalStorage(); // Actualizar el almacenamiento local
+    }
+
+    /**
+     * Actualiza el almacenamiento local con el estado actual de las tareas.
+     */
+    updateLocalStorage() {
+        localStorage.setItem('tasks', JSON.stringify(this.tasks)); // Guardar las tareas en localStorage
+    }
+
+    /**
+     * Obtiene todas las tareas.
+     * 
+     * @returns {Array} Arreglo con las tareas almacenadas.
+     */
+    getTasks() {
+        return this.tasks;
+    }
+}
+
+// Crear una instancia del gestor de tareas
+const taskManager = new TaskManager();
+
+/**
+ * Función para agregar una nueva tarea.
+ */
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const text = taskInput.value.trim(); // Obtener el texto de la tarea
+
+    if(text) {
+        taskManager.addTask(text); // Agregar la tarea al gestor
+        taskInput.value = ''; // Limpiar el campo de entrada
+        renderTasks(); // Renderizar las tareas actualizadas
+    }
+}
+
+/**
+ * Función para eliminar una tarea por su índice.
+ * 
+ * @param {number} index El índice de la tarea a eliminar.
+ */
+function deleteTask(index) {
+    taskManager.removeTask(index); // Eliminar la tarea del gestor
+    renderTasks(); // Renderizar las tareas actualizadas
+}
+
+/**
+ * Función para renderizar todas las tareas en el DOM.
+ */
+function renderTasks() {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = ''; // Limpiar la lista de tareas antes de volver a renderizar
+
+    taskManager.getTasks().forEach((task, index) => {
+        // Crear un elemento de lista para cada tarea
+        const taskEl = document.createElement('li');
+        const taskText = document.createElement('span');
+        taskText.textContent = task.text; // Mostrar el texto de la tarea
+        taskText.style.flexGrow = '1';
+
+        // Si la tarea está completada, mostrarla tachada
+        if(task.completed) {
+            taskText.style.textDecoration = 'line-through';
+        }
+
+        // Crear un botón para eliminar la tarea
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Borrar';
+        deleteBtn.onclick = () => deleteTask(index); // Asignar función de eliminación al botón
+        deleteBtn.style.marginLeft = '10px';
+        deleteBtn.classList.add('buttonB'); // Añadir clase para estilos
+
+        // Añadir los elementos al DOM
+        taskEl.appendChild(taskText);
+        taskEl.appendChild(deleteBtn);
+        taskList.appendChild(taskEl);
+    });
+}
+
+/**
+ * Función para alternar el estado de completado de una tarea.
+ * 
+ * @param {number} index El índice de la tarea a modificar.
+ */
+function toggleTaskCompleted(index) {
+    taskManager.toggleTaskCompleted(index); // Cambiar el estado de la tarea
+    renderTasks(); // Renderizar las tareas actualizadas
+}
+
+// Asociar el evento de añadir tarea al botón
+document.getElementById('addTaskBtn').addEventListener('click', addTask);
+
+// Inicializar la visualización de tareas al cargar la página
+renderTasks();
